@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>옷 골라줘 ♡</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#faf9f7;color:#242424;font-family:Arial,'Malgun Gothic',sans-serif}
+header{text-align:center;padding:55px 15px 32px}
+header h1{font-size:30px;letter-spacing:2px;margin:0 0 12px}
+header p{color:#777;font-size:14px}
+main{max-width:950px;margin:auto;padding:0 16px 130px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.item{background:white;border:2px solid transparent;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;box-shadow:0 2px 10px #00000008}
+.item.selected{border-color:#e76888}
+.item img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;background:#eee}
+.info{padding:14px}
+.info strong{font-size:14px}
+.info p{font-size:12px;color:#888;margin:7px 0 0}
+.heart{position:absolute;right:12px;top:12px;background:white;border-radius:50%;width:36px;height:36px;display:grid;place-items:center;font-size:20px}
+.selected .heart{color:#e76888}
+.bottom{position:fixed;bottom:0;left:0;width:100%;background:white;padding:15px;box-shadow:0 -3px 18px #00000012;text-align:center}
+button{border:0;background:#222;color:white;padding:15px 35px;border-radius:8px;font-size:15px;cursor:pointer;width:min(100%,450px)}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<header>
+<h1>CLOSET PICK ♡</h1>
+<p>마음에 드는 옷을 골라줘!</p>
+<p>여러 개 선택해도 돼 ♡</p>
+</header>
+<main><div class="grid" id="grid"></div></main>
+<div class="bottom">
+<button onclick="sendSelection()">선택 완료 (<span id="count">0</span>개)</button>
+</div>
+<script>
+const grid=document.getElementById('grid');
+const selected=new Set();
+
+for(let i=1;i<=20;i++){
+ const num=String(i).padStart(2,'0');
+ const card=document.createElement('div');
+ card.className='item';
+ card.innerHTML=`
+ <span class="heart">♡</span>
+ <img src="images/${num}.jpg" alt="옷 ${num}" 
+ onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+ <div style="display:none;aspect-ratio:3/4;background:#eee;place-items:center;color:#888">사진 ${num}</div>
+ <div class="info"><strong>${num}. 옷 ${num}</strong><p>선택하려면 눌러줘</p></div>`;
+ card.onclick=()=>{
+  if(selected.has(num)){selected.delete(num);card.classList.remove('selected')}
+  else{selected.add(num);card.classList.add('selected')}
+  card.querySelector('.heart').textContent=selected.has(num)?'♥':'♡';
+  document.getElementById('count').textContent=selected.size;
+ };
+ grid.appendChild(card);
+}
+
+async function sendSelection(){
+ if(!selected.size){alert('옷을 먼저 골라줘!');return}
+ const message='내가 고른 옷 ♡\n'+[...selected].sort().map(n=>'옷 '+n+'번').join('\n');
+ if(navigator.share){
+  try{await navigator.share({text:message});return}catch(e){
+   if(e.name==='AbortError')return;
+  }
+ }
+ try{
+  await navigator.clipboard.writeText(message);
+  alert('선택 목록을 복사했어! 카톡에 붙여넣어 줘.');
+ }catch(e){prompt('선택 목록을 복사해 줘:',message)}
+}
+</script>
+</body>
+</html>
