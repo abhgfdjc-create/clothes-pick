@@ -59,19 +59,38 @@ for(let i=1;i<=20;i++){
  grid.appendChild(card);
 }
 
-async function sendSelection(){
- if(!selected.size){alert('옷을 먼저 골라줘!');return}
- const message='내가 고른 옷 ♡\n'+[...selected].sort().map(n=>'옷 '+n+'번').join('\n');
- if(navigator.share){
-  try{await navigator.share({text:message});return}catch(e){
-   if(e.name==='AbortError')return;
+
+async function sendSelection() {
+  if (selected.size === 0) {
+    alert('마음에 드는 옷을 먼저 골라줘!');
+    return;
   }
- }
- try{
-  await navigator.clipboard.writeText(message);
-  alert('선택 목록을 복사했어! 카톡에 붙여넣어 줘.');
- }catch(e){prompt('선택 목록을 복사해 줘:',message)}
+
+  const items = [...selected].sort();
+
+  const message =
+    '♡ 내가 고른 옷 ♡\n\n' +
+    items.map(n => '옷 ' + n + '번').join('\n') +
+    '\n\n총 ' + items.length + '개 선택했어!';
+
+  // 휴대폰에서 카카오톡을 포함한 공유 앱 선택
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: '내가 고른 옷',
+        text: message
+      });
+      return;
+    } catch (error) {
+      if (error.name === 'AbortError') return;
+    }
+  }
+
+  // 공유 기능이 없으면 복사
+  try {
+    await navigator.clipboard.writeText(message);
+    alert('선택 목록을 복사했어! 카카오톡에 붙여넣어 줘.');
+  } catch (error) {
+    prompt('아래 내용을 복사해서 카카오톡으로 보내줘.', message);
+  }
 }
-</script>
-</body>
-</html>
