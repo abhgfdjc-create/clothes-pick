@@ -7,192 +7,227 @@
 <title>옷 골라줘 ♡</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#faf9f7;
+  color:#242424;
+  font-family:Arial,"Malgun Gothic",sans-serif;
 }
 
-body {
-  margin: 0;
-  background: #faf9f7;
-  color: #242424;
-  font-family: Arial, "Malgun Gothic", sans-serif;
+body.modal-open{overflow:hidden}
+
+header{
+  text-align:center;
+  padding:55px 15px 32px;
 }
 
-body.modal-open {
-  overflow: hidden;
+header h1{
+  font-size:30px;
+  letter-spacing:2px;
+  margin:0 0 12px;
 }
 
-header {
-  text-align: center;
-  padding: 55px 15px 32px;
+header p{
+  color:#777;
+  font-size:14px;
 }
 
-header h1 {
-  font-size: 30px;
-  letter-spacing: 2px;
-  margin: 0 0 12px;
+main{
+  max-width:950px;
+  margin:auto;
+  padding:0 16px 130px;
 }
 
-header p {
-  color: #777;
-  font-size: 14px;
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:18px;
 }
 
-main {
-  max-width: 950px;
-  margin: auto;
-  padding: 0 16px 130px;
+.item{
+  background:white;
+  border:2px solid transparent;
+  border-radius:12px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:0 2px 10px #00000008;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 18px;
+.item.selected{
+  border-color:#e76888;
 }
 
-.item {
-  background: white;
-  border: 2px solid transparent;
-  border-radius: 12px;
-  overflow: hidden;
-  position: relative;
-  box-shadow: 0 2px 10px #00000008;
-  transition: border-color 0.2s;
+.image-wrap{position:relative}
+
+.item img{
+  display:block;
+  width:100%;
+  aspect-ratio:3/4;
+  object-fit:cover;
+  background:#eee;
+  cursor:zoom-in;
 }
 
-.item.selected {
-  border-color: #e76888;
+.info{
+  padding:14px 8px;
+  text-align:center;
 }
 
-.image-wrap {
-  position: relative;
+.info strong{
+  font-size:14px;
+  line-height:1.5;
 }
 
-.item img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 3/4;
-  object-fit: cover;
-  background: #eee;
-  cursor: zoom-in;
+.heart{
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:36px;
+  height:36px;
+  border:0;
+  border-radius:50%;
+  background:white;
+  color:#242424;
+  display:grid;
+  place-items:center;
+  font-size:23px;
+  cursor:pointer;
+  box-shadow:0 2px 6px #00000015;
+  z-index:2;
 }
 
-.info {
-  padding: 14px 8px;
-  text-align: center;
+.item.selected .heart{
+  color:#e76888;
 }
 
-.info strong {
-  font-size: 14px;
-  line-height: 1.5;
+.bottom{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:white;
+  padding:15px;
+  box-shadow:0 -3px 18px #00000012;
+  text-align:center;
+  z-index:100;
 }
 
-.heart {
-  position: absolute;
-  right: 12px;
-  top: 12px;
-  background: white;
-  color: #242424;
-  border: 0;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  display: grid;
-  place-items: center;
-  font-size: 23px;
-  cursor: pointer;
-  box-shadow: 0 2px 6px #00000015;
-  z-index: 2;
+.submit-btn,
+.action-btn{
+  border:0;
+  background:#222;
+  color:white;
+  padding:15px 25px;
+  border-radius:8px;
+  font-size:15px;
+  cursor:pointer;
 }
 
-.item.selected .heart {
-  color: #e76888;
+.submit-btn{
+  width:min(100%,450px);
 }
 
-.heart:focus-visible,
-.close-modal:focus-visible,
-.item img:focus-visible {
-  outline: 3px solid #e76888;
-  outline-offset: 2px;
+/* 사진 확대 */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  background:rgba(0,0,0,.85);
+  align-items:center;
+  justify-content:center;
+  padding:55px 16px 40px;
 }
 
-.bottom {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: white;
-  padding: 15px;
-  box-shadow: 0 -3px 18px #00000012;
-  text-align: center;
-  z-index: 100;
+.modal.active{display:flex}
+
+.modal-content{
+  position:relative;
+  max-width:min(95vw,850px);
+  max-height:calc(100dvh - 100px);
 }
 
-.submit-btn {
-  border: 0;
-  background: #222;
-  color: white;
-  padding: 15px 35px;
-  border-radius: 8px;
-  font-size: 15px;
-  cursor: pointer;
-  width: min(100%, 450px);
+.modal-content img{
+  display:block;
+  max-width:100%;
+  max-height:calc(100dvh - 100px);
+  object-fit:contain;
+  border-radius:8px;
 }
 
-/* 사진 확대 화면 */
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background: rgba(0, 0, 0, 0.85);
-  align-items: center;
-  justify-content: center;
-  padding: 55px 16px 40px;
+.close-modal{
+  position:absolute;
+  top:-45px;
+  right:0;
+  width:38px;
+  height:38px;
+  border:0;
+  border-radius:50%;
+  background:white;
+  color:#222;
+  font-size:25px;
+  cursor:pointer;
 }
 
-.modal.active {
-  display: flex;
+/* 결과 화면 */
+.result-info{
+  display:none;
+  max-width:950px;
+  margin:0 auto 25px;
+  padding:0 16px;
+  text-align:center;
 }
 
-.modal-content {
-  position: relative;
-  max-width: min(95vw, 850px);
-  max-height: calc(100vh - 100px);
-  max-height: calc(100dvh - 100px);
+.result-info.active{display:block}
+
+.result-info p{
+  color:#777;
+  font-size:14px;
 }
 
-.modal-content img {
-  display: block;
-  max-width: 100%;
-  max-height: calc(100vh - 100px);
-  max-height: calc(100dvh - 100px);
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  border-radius: 8px;
+.result-actions{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:20px;
 }
 
-.close-modal {
-  position: absolute;
-  top: -45px;
-  right: 0;
-  width: 38px;
-  height: 38px;
-  border: 0;
-  border-radius: 50%;
-  background: white;
-  color: #222;
-  font-size: 25px;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
+.result-actions button{
+  padding:12px 18px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  background:white;
+  color:#222;
+  cursor:pointer;
+  font-size:14px;
 }
 
-@media (min-width: 700px) {
-  .grid {
-    grid-template-columns: repeat(4, 1fr);
+.result-actions button.active{
+  background:#222;
+  color:white;
+  border-color:#222;
+}
+
+.result-mode .heart{
+  pointer-events:none;
+  cursor:default;
+}
+
+.result-mode .item:not(.selected){
+  opacity:.65;
+}
+
+.result-mode.only-selected
+.item:not(.selected){
+  display:none;
+}
+
+@media(min-width:700px){
+  .grid{
+    grid-template-columns:repeat(4,1fr);
   }
 }
 </style>
@@ -202,15 +237,39 @@ main {
 
 <header>
   <h1>CLOSET PICK ♡</h1>
-  <p>마음에 드는 옷을 골라줘!</p>
-  <p>여러 개 선택해도 돼 ♡</p>
+  <p id="subtitle">마음에 드는 옷을 골라줘!</p>
+  <p id="subtext">여러 개 선택해도 돼 ♡</p>
 </header>
+
+<section class="result-info" id="resultInfo">
+  <h2>♡ 옷 선택 결과 ♡</h2>
+  <p id="resultCount"></p>
+
+  <div class="result-actions">
+    <button
+      type="button"
+      id="showAllBtn"
+      class="active"
+      onclick="setResultFilter(false)"
+    >
+      전체 옷 보기
+    </button>
+
+    <button
+      type="button"
+      id="showSelectedBtn"
+      onclick="setResultFilter(true)"
+    >
+      선택한 옷만 보기
+    </button>
+  </div>
+</section>
 
 <main>
   <div class="grid" id="grid"></div>
 </main>
 
-<div class="bottom">
+<div class="bottom" id="bottomBar">
   <button
     type="button"
     class="submit-btn"
@@ -220,7 +279,7 @@ main {
   </button>
 </div>
 
-<!-- 사진 확대 화면 -->
+<!-- 사진 확대 -->
 <div
   class="modal"
   id="imageModal"
@@ -243,7 +302,7 @@ main {
 
 <script>
 
-// 기존 옷 19개 - 순서 유지
+// 옷 이름 및 순서
 const clothes = [
   "숏패딩",
   "논퀄팅 패딩",
@@ -275,64 +334,124 @@ const closeButton = document.getElementById("closeModal");
 
 let previousFocus = null;
 
+// 공유 링크에 저장된 선택 번호 읽기
+const params = new URLSearchParams(location.search);
+const resultParam = params.get("result");
+
+const resultMode = resultParam !== null;
+
+// 결과 링크라면 선택값 불러오기
+if(resultMode){
+
+  const ids = resultParam.split(",");
+
+  ids.forEach(value => {
+    const id = Number(value);
+
+    if(
+      Number.isInteger(id) &&
+      id >= 1 &&
+      id <= clothes.length
+    ){
+      selected.add(id);
+    }
+  });
+
+  document.body.classList.add("result-mode");
+
+  document.getElementById("subtitle").textContent =
+    "선택한 옷들을 확인해 봐 ♡";
+
+  document.getElementById("subtext").textContent =
+    "분홍색 하트가 선택한 옷이야";
+
+  document.getElementById("resultInfo")
+    .classList.add("active");
+
+  document.getElementById("resultCount")
+    .textContent =
+    "총 " + selected.size + "개를 선택했어!";
+
+  document.getElementById("bottomBar")
+    .style.display = "none";
+
+}
+
+// 결과 화면 필터
+function setResultFilter(onlySelected){
+
+  document.body.classList.toggle(
+    "only-selected",
+    onlySelected
+  );
+
+  document.getElementById("showAllBtn")
+    .classList.toggle("active",!onlySelected);
+
+  document.getElementById("showSelectedBtn")
+    .classList.toggle("active",onlySelected);
+}
+
+
 // 사진 확대
-function openImage(src, name) {
+function openImage(src,name){
+
   previousFocus = document.activeElement;
 
   modalImage.src = src;
   modalImage.alt = name;
 
   modal.classList.add("active");
-  modal.setAttribute("aria-hidden", "false");
+  modal.setAttribute("aria-hidden","false");
+
   document.body.classList.add("modal-open");
 
   closeButton.focus();
 }
 
-// 사진 닫기
-function closeImage() {
+// 사진 확대 닫기
+function closeImage(){
+
   modal.classList.remove("active");
-  modal.setAttribute("aria-hidden", "true");
+  modal.setAttribute("aria-hidden","true");
+
   document.body.classList.remove("modal-open");
 
   modalImage.removeAttribute("src");
 
-  if (previousFocus && previousFocus.focus) {
+  if(previousFocus && previousFocus.focus){
     previousFocus.focus();
   }
 }
 
-// X 버튼으로 닫기
-closeButton.addEventListener("click", closeImage);
+closeButton.addEventListener("click",closeImage);
 
-// 사진 바깥 어두운 배경 클릭 시 닫기
-modal.addEventListener("click", function(event) {
-  if (event.target === modal) {
+modal.addEventListener("click",event=>{
+  if(event.target === modal){
     closeImage();
   }
 });
 
-// ESC 키로 닫기
-document.addEventListener("keydown", function(event) {
-  if (!modal.classList.contains("active")) return;
+document.addEventListener("keydown",event=>{
 
-  if (event.key === "Escape") {
+  if(!modal.classList.contains("active"))return;
+
+  if(event.key === "Escape"){
     closeImage();
   }
 
-  // 확대 창 안에서 키보드 포커스 유지
-  if (event.key === "Tab") {
+  if(event.key === "Tab"){
     event.preventDefault();
     closeButton.focus();
   }
 });
 
 
-// 사진 카드 생성
-clothes.forEach((name, index) => {
+// 옷 카드 생성
+clothes.forEach((name,index)=>{
 
-  const num = String(index + 1).padStart(2, "0");
   const id = index + 1;
+  const num = String(id).padStart(2,"0");
 
   const card = document.createElement("div");
   card.className = "item";
@@ -340,24 +459,23 @@ clothes.forEach((name, index) => {
   const imageWrap = document.createElement("div");
   imageWrap.className = "image-wrap";
 
-  // 하트 버튼 - 선택 전용
   const heart = document.createElement("button");
   heart.type = "button";
   heart.className = "heart";
-  heart.textContent = "♡";
-  heart.setAttribute("aria-label", `${name} 선택`);
-  heart.setAttribute("aria-pressed", "false");
 
-  // 사진 - 확대 전용
   const img = document.createElement("img");
 
-  // 사진은 GitHub 저장소 최상위에 있음
+  // 현재 GitHub 저장소 최상위 사진 경로
   img.src = `./${num}.png`;
+
   img.alt = name;
   img.loading = "lazy";
   img.tabIndex = 0;
-  img.setAttribute("role", "button");
-  img.setAttribute("aria-label", `${name} 사진 크게 보기`);
+  img.setAttribute("role","button");
+  img.setAttribute(
+    "aria-label",
+    name + " 사진 크게 보기"
+  );
 
   const placeholder = document.createElement("div");
   placeholder.style.cssText =
@@ -367,43 +485,68 @@ clothes.forEach((name, index) => {
 
   placeholder.textContent = "사진 준비 중";
 
-  img.onerror = () => {
+  img.onerror = ()=>{
     img.style.display = "none";
     placeholder.style.display = "grid";
   };
 
-  // 사진을 누르면 확대만 실행
-  img.addEventListener("click", () => {
-    openImage(img.src, name);
-  });
+  // 선택된 옷은 하트 표시
+  function updateHeart(){
 
-  // 키보드에서도 확대 가능
-  img.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      openImage(img.src, name);
-    }
-  });
+    const isSelected = selected.has(id);
 
-  // 하트를 누르면 선택만 실행
-  heart.addEventListener("click", () => {
+    card.classList.toggle("selected",isSelected);
 
-    if (selected.has(id)) {
+    heart.textContent =
+      isSelected ? "♥" : "♡";
+
+    heart.setAttribute(
+      "aria-pressed",
+      String(isSelected)
+    );
+
+    heart.setAttribute(
+      "aria-label",
+      name + (
+        isSelected ? " 선택됨" : " 선택 안 됨"
+      )
+    );
+
+    document.getElementById("count")
+      .textContent = selected.size;
+  }
+
+  updateHeart();
+
+  // 선택 화면에서만 하트 작동
+  heart.addEventListener("click",()=>{
+
+    if(resultMode)return;
+
+    if(selected.has(id)){
       selected.delete(id);
-      card.classList.remove("selected");
-      heart.textContent = "♡";
-      heart.setAttribute("aria-pressed", "false");
-      heart.setAttribute("aria-label", `${name} 선택`);
-    } else {
+    }else{
       selected.add(id);
-      card.classList.add("selected");
-      heart.textContent = "♥";
-      heart.setAttribute("aria-pressed", "true");
-      heart.setAttribute("aria-label", `${name} 선택 해제`);
     }
 
-    document.getElementById("count").textContent =
-      selected.size;
+    updateHeart();
+  });
+
+  // 사진 클릭은 확대
+  img.addEventListener("click",()=>{
+    openImage(img.src,name);
+  });
+
+  img.addEventListener("keydown",event=>{
+
+    if(
+      event.key === "Enter" ||
+      event.key === " "
+    ){
+      event.preventDefault();
+      openImage(img.src,name);
+    }
+
   });
 
   const info = document.createElement("div");
@@ -425,52 +568,72 @@ clothes.forEach((name, index) => {
 });
 
 
-// 선택 결과 공유
-async function sendSelection() {
+// 선택 완료 후 결과 링크 공유
+async function sendSelection(){
 
-  if (selected.size === 0) {
+  if(selected.size === 0){
     alert("마음에 드는 옷을 먼저 골라줘!");
     return;
   }
 
-  const items = [...selected].sort((a, b) => a - b);
+  // 선택된 옷 번호를 링크에 저장
+  const items = [...selected].sort((a,b)=>a-b);
+
+  const url = new URL(window.location.href);
+
+  url.search = "";
+  url.hash = "";
+
+  url.searchParams.set(
+    "result",
+    items.join(",")
+  );
+
+  const resultUrl = url.toString();
 
   const message =
-    "♡ 내가 고른 옷 ♡\n\n" +
-    items.map(id =>
-      `${id}번 ${clothes[id - 1]}`
-    ).join("\n") +
-    "\n\n총 " + items.length + "개 선택했어!";
+    "♡ 옷 선택 결과 ♡\n\n" +
+    "아래 링크를 눌러 결과보기!\n\n" +
+    resultUrl;
 
-  // 휴대폰 기본 공유 메뉴
-  if (navigator.share) {
-    try {
+  // 모바일 공유 메뉴
+  if(navigator.share){
+
+    try{
+
       await navigator.share({
-        title: "내가 고른 옷 ♡",
-        text: message
+        title:"옷 선택 결과 ♡",
+        text:message
       });
+
       return;
-    } catch (error) {
-      if (error.name === "AbortError") {
+
+    }catch(error){
+
+      if(error.name === "AbortError"){
         return;
       }
+
     }
   }
 
-  // 공유 미지원 시 복사
-  try {
+  // 공유 메뉴 미지원 시 복사
+  try{
+
     await navigator.clipboard.writeText(message);
 
     alert(
-      "선택한 옷 목록이 복사됐어!\n" +
+      "결과보기 링크가 복사됐어!\n" +
       "카카오톡에 붙여넣어 줘 ♡"
     );
 
-  } catch (error) {
+  }catch(error){
+
     prompt(
-      "아래 내용을 복사해서 카카오톡으로 보내줘.",
+      "아래 링크를 복사해서 카카오톡으로 보내줘.",
       message
     );
+
   }
 }
 
